@@ -60,12 +60,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="GameViewController.cs" />
+    <Compile Include="Helpers\ConstraintUtil.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
-    <Compile Include="Services\PlayerDataService.cs" />
+    <Compile Include="Services\GameDataService.cs" />
+    <Compile Include="Views\PlayerView.cs" />
     <None Include="GettingStarted.Xamarin" />
     <None Include="Info.plist" />
-    <Compile Include="Models\PlayerData.cs" />
+    <Compile Include="Models\GameData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <InterfaceDefinition Include="Resources\LaunchScreen.xib" />
     <None Include="packages.config" />
@@ -82,6 +84,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Entitlements.plist" />
+    <BundleResource Include="Resources\9524.png" />
+    <BundleResource Include="Resources\15860.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
