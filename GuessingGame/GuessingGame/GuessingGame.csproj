@@ -64,6 +64,7 @@
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <Compile Include="Services\GameDataService.cs" />
+    <Compile Include="Views\ScoreView.cs" />
     <Compile Include="Views\PlayerView.cs" />
     <None Include="GettingStarted.Xamarin" />
     <None Include="Info.plist" />

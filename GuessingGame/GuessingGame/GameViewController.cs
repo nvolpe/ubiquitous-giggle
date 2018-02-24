@@ -17,6 +17,7 @@ namespace GuessingGame
     {
         PlayerView playerImage;
         PlayerView playerImage1;
+        ScoreView ScoreView;
 
         public GameViewController()
         {
@@ -69,6 +70,7 @@ namespace GuessingGame
             //var url1 = gameData.Players[1].images.@default.url;
 
             AddPlayerViews();
+            AddScoreView();
 
             activitySpinner.StopAnimating();
             activitySpinner.RemoveFromSuperview();
@@ -82,46 +84,18 @@ namespace GuessingGame
             playerImage = new PlayerView();
             playerImage1 = new PlayerView();
 
-            //playerImage.BackgroundColor = UIColor.Blue;
-            //playerImage1.BackgroundColor = UIColor.Green;
-
             View.Add(playerImage);
             View.Add(playerImage1);
 
             /* 
              *  🔈
              *  
-             *  My prefernce is to write constraints in code instead of using the storyboard.. but im down with whatever you guys want.
+             *  I try to write constraints in code instead of using the storyboard.. but im down with whatever you guys want.
              *  When I started my crash course in Xamarin.iOS, iOS 11 had just come out and the Xamarin designer had several bugs. So in
              *  order to deliver the iPad app for our client in time I just deleted the storyboard and started with frame based layouts.
              */
 
-            // Start: Image view Constraints
-            // -------------------------------
-            //playerImage.WidthAnchor.ConstraintEqualTo(View.WidthAnchor, .25f).Active = true;
-            //playerImage1.WidthAnchor.ConstraintEqualTo(View.WidthAnchor, .25f).Active = true;
-
-            //var aspectRatio = 1;
-            //playerImage.WidthAnchor.ConstraintEqualTo(playerImage.HeightAnchor, aspectRatio).Active = true;
-            //playerImage1.WidthAnchor.ConstraintEqualTo(playerImage1.HeightAnchor, aspectRatio).Active = true;
-
-            //playerImage.TopAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.TopAnchor, 80).Active = true;
-            //playerImage1.TopAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.TopAnchor, 80).Active = true;
-
-
-            //playerImage.LeadingAnchor.ConstraintEqualTo(View.LeadingAnchor, 20).Active = true;
-            //playerImage1.TrailingAnchor.ConstraintEqualTo(View.TrailingAnchor, 20).Active = true;
-
-            //playerImage.TopAnchor.ConstraintEqualTo(playerImage1.TopAnchor).Active = true;
-            //View.TrailingAnchor.ConstraintEqualTo(playerImage1.TrailingAnchor, 20).Active = true;
-
-            //var compressionConstraint = playerImage1.LeadingAnchor.ConstraintEqualTo(playerImage.TrailingAnchor, 50);
-            //compressionConstraint.Priority = (float)UILayoutPriority.DefaultHigh;
-            //compressionConstraint.Active = true;
-            // END: Image view Constraints
-            // -------------------------------
-
-            // Start: Image view Constraints
+            // Start: Player view Constraints
             // -------------------------------
             playerImage.WidthAnchor.ConstraintEqualTo(150).Active = true;
             playerImage1.WidthAnchor.ConstraintEqualTo(150).Active = true;
@@ -134,14 +108,36 @@ namespace GuessingGame
 
             playerImage.LeadingAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.LeadingAnchor, 10).Active = true;
             View.LayoutMarginsGuide.TrailingAnchor.ConstraintEqualTo(playerImage1.TrailingAnchor, 10).Active = true;
-            // END: Image view Constraints
+
+            // END: Player view Constraints
             // -------------------------------
-
-            //playerImage.WidthAnchor.ConstraintEqualTo(150).Active = true;
-            //playerImage.HeightAnchor.ConstraintEqualTo(150).Active = true;
-
-            //playerImage.CenterXAnchor.ConstraintEqualTo(View.CenterXAnchor).Active = true;
-            //playerImage.CenterYAnchor.ConstraintEqualTo(View.CenterYAnchor).Active = true;
         }
+
+
+        private void AddScoreView()
+        {
+            ScoreView = new ScoreView();
+            View.Add(ScoreView);
+
+            /* 
+             *  🔈
+             *  
+             *  I should have probably used some stack views, but if I have time sunday I want to rock your world with some 
+             *  constraint animations. So I'm holding out hope I can make that happen.
+             *  
+             */
+
+            // Start: Score View Constraints
+            // -------------------------------
+            ScoreView.TopAnchor.ConstraintEqualTo(playerImage1.LayoutMarginsGuide.BottomAnchor, 160).Active = true;
+            ScoreView.LeadingAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.LeadingAnchor).Active = true;
+            View.LayoutMarginsGuide.TrailingAnchor.ConstraintEqualTo(ScoreView.TrailingAnchor).Active = true;
+            View.LayoutMarginsGuide.BottomAnchor.ConstraintEqualTo(ScoreView.BottomAnchor).Active = true;
+
+            // END: Score View Constraints
+            // -------------------------------
+        }
+
+
     }
 }
