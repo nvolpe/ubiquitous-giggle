@@ -64,21 +64,21 @@ namespace GuessingGame.Views
             InfoLabel.TextColor = UIColor.Black;
             InfoLabel.Font = UIFont.FromName("Helvetica-Bold", 20f);
             InfoLabel.TextAlignment = UITextAlignment.Center;
-            InfoLabel.Text = "Place holder text";
+            InfoLabel.Text = "Your Selection:";
 
             NameLabel = new UILabel();
             NameLabel.TranslatesAutoresizingMaskIntoConstraints = false;
             NameLabel.TextColor = UIColor.Black;
             NameLabel.Font = UIFont.FromName("Helvetica-Bold", 20f);
             NameLabel.TextAlignment = UITextAlignment.Center;
-            NameLabel.Text = "Place holder text";
+            NameLabel.Text = "------";
 
             ScoreLabel = new UILabel();
             ScoreLabel.TranslatesAutoresizingMaskIntoConstraints = false;
             ScoreLabel.TextColor = UIColor.Black;
             ScoreLabel.Font = UIFont.FromName("Helvetica-Bold", 20f);
             ScoreLabel.TextAlignment = UITextAlignment.Center;
-            ScoreLabel.Text = "Place holder text";
+            ScoreLabel.Text = "Score 0 of 10";
 
             // The Button
             // ---------------------------------
@@ -88,14 +88,24 @@ namespace GuessingGame.Views
             GuessButton.SetTitle("GUESS", UIControlState.Normal);
             GuessButton.BackgroundColor = UIColor.Blue;
             GuessButton.Layer.CornerRadius = 8;
+            GuessButton.Alpha = 0.5f;
+            GuessButton.UserInteractionEnabled = false;
             GuessButton.SetTitleColor(UIColor.White, UIControlState.Normal);
-
 
             // add these suckas to the super view
             this.Add(InfoLabel);
             this.Add(NameLabel);
             this.Add(ScoreLabel);
             this.Add(GuessButton);
+        }
+
+        public void EnableButton(string playername)
+        {
+            GuessButton.Alpha = 1f;
+            GuessButton.BackgroundColor = UIColor.Green;
+            GuessButton.UserInteractionEnabled = true;
+
+            NameLabel.Text = playername;
         }
     }
 }

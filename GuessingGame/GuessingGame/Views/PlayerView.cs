@@ -13,6 +13,8 @@ namespace GuessingGame.Views
         public UIImageView PlayerImageView { get; set; }
         public UILabel PlayerNameLabel { get; set; }
 
+        public event Action<string> PlayerSelected;
+
         public PlayerView(/*UIImage image*/)
         {
             CreateImageView();
@@ -63,6 +65,10 @@ namespace GuessingGame.Views
             PlayerImageView.TranslatesAutoresizingMaskIntoConstraints = false;
             PlayerImageView.Layer.BorderWidth = 5;
             PlayerImageView.Layer.BorderColor = UIColor.Green.CGColor;
+            PlayerImageView.UserInteractionEnabled = true;
+
+            UITapGestureRecognizer tapGesture = new UITapGestureRecognizer(ImageTapped);
+            PlayerImageView.AddGestureRecognizer(tapGesture);
 
             this.Add(PlayerImageView);
         }
@@ -74,7 +80,7 @@ namespace GuessingGame.Views
             PlayerNameLabel.TextColor = UIColor.Black;
             PlayerNameLabel.Font = UIFont.FromName("Helvetica-Bold", 20f);
             PlayerNameLabel.TextAlignment = UITextAlignment.Center;
-            PlayerNameLabel.Text = "Lebron James";
+            PlayerNameLabel.Text = "Michael Jordan";
 
             this.Add(PlayerNameLabel);
         }
@@ -86,6 +92,12 @@ namespace GuessingGame.Views
             //using (var url = new NSUrl(uri))
             //using (var data = NSData.FromUrl(url))
             //    return UIImage.LoadFromData(data);
+        }
+
+        void ImageTapped()
+        {
+            if (PlayerSelected != null)
+                PlayerSelected(PlayerNameLabel.Text);
         }
     }
 }

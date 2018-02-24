@@ -87,6 +87,9 @@ namespace GuessingGame
             View.Add(playerImage);
             View.Add(playerImage1);
 
+            playerImage.PlayerSelected += PlayerSelected;
+            playerImage1.PlayerSelected += PlayerSelected;
+
             /* 
              *  🔈
              *  
@@ -138,6 +141,9 @@ namespace GuessingGame
             // -------------------------------
         }
 
-
+        private void PlayerSelected(string playerName)
+        {
+            ScoreView.EnableButton(playerName);
+        }
     }
 }
