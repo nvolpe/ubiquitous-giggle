@@ -12,25 +12,6 @@ using GuessingGame.Views;
 
 namespace GuessingGame
 {
-    //[Register("UniversalView")]
-    //public class UniversalView : UIView
-    //{
-    //    public UniversalView()
-    //    {
-    //        Initialize();
-    //    }
-
-    //    public UniversalView(RectangleF bounds) : base(bounds)
-    //    {
-    //        Initialize();
-    //    }
-
-    //    void Initialize()
-    //    {
-    //        BackgroundColor = UIColor.Red;
-    //    }
-    //}
-
     [Register("GameViewController")]
     public class GameViewController : UIViewController
     {
@@ -58,27 +39,19 @@ namespace GuessingGame
              *  
              */
 
-            View.BackgroundColor = UIColor.White;
-
+            View.BackgroundColor = UIColor.LightGray;
 
             base.ViewDidLoad();
 
             // Perform any additional setup after loading the view
-
             Initialize();
         }
 
-        public override void ViewDidLayoutSubviews()
-        {
-            base.ViewDidLayoutSubviews();
 
-            // Temporary code to apply circle image frame
-            playerImage.Layer.CornerRadius = playerImage.Frame.Size.Width / 2;
-            playerImage.ClipsToBounds = true;
-
-            playerImage1.Layer.CornerRadius = playerImage1.Frame.Size.Width / 2;
-            playerImage1.ClipsToBounds = true;
-        }
+        //public override void ViewDidLayoutSubviews()
+        //{
+        //    //base.ViewDidLayoutSubviews();
+        //}
 
         async void Initialize()
         {
@@ -95,67 +68,80 @@ namespace GuessingGame
             //var url = gameData.Players[0].images.@default.url;
             //var url1 = gameData.Players[1].images.@default.url;
 
-            playerImage = CreateImageView("");
-            playerImage1 = CreateImageView("");
-
-            View.Add(playerImage);
-            View.Add(playerImage1);
-
-
-            // Start: Image view Constraints
-            // -------------------------------
-            playerImage.WidthAnchor.ConstraintEqualTo(View.WidthAnchor, .25f).Active = true;
-            playerImage1.WidthAnchor.ConstraintEqualTo(View.WidthAnchor, .25f).Active = true;
-
-            var aspectRatio = 1;
-            playerImage.WidthAnchor.ConstraintEqualTo(playerImage.HeightAnchor, aspectRatio).Active = true;
-            playerImage1.WidthAnchor.ConstraintEqualTo(playerImage1.HeightAnchor, aspectRatio).Active = true;
-
-            playerImage.TopAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.TopAnchor, 80).Active = true;
-            playerImage1.TopAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.TopAnchor, 80).Active = true;
-
-
-            playerImage.LeadingAnchor.ConstraintEqualTo(View.LeadingAnchor, 20).Active = true;
-            playerImage1.TrailingAnchor.ConstraintEqualTo(View.TrailingAnchor, 20).Active = true;
-
-
-            playerImage.TopAnchor.ConstraintEqualTo(playerImage1.TopAnchor).Active = true;
-
-            View.TrailingAnchor.ConstraintEqualTo(playerImage1.TrailingAnchor, 20).Active = true;
-
-
-            var compressionConstraint = playerImage1.LeadingAnchor.ConstraintEqualTo(playerImage.TrailingAnchor, 50);
-            compressionConstraint.Priority = (float)UILayoutPriority.DefaultHigh;
-            compressionConstraint.Active = true;
-            // END: Image view Constraints
-            // -------------------------------
-
+            AddPlayerViews();
 
             activitySpinner.StopAnimating();
             activitySpinner.RemoveFromSuperview();
         }
 
-        private PlayerView CreateImageView(string uri)
+        private void AddPlayerViews()
         {
-            UIImage image = FromUrl(uri);
+            //playerImage = CreateImageView("");
+            //playerImage1 = CreateImageView("");
 
-            PlayerView playerImage = new PlayerView(image);
-            playerImage.TranslatesAutoresizingMaskIntoConstraints = false;
-            playerImage.Layer.BorderWidth = 5;
-            playerImage.Layer.BorderColor = UIColor.Blue.CGColor;
+            playerImage = new PlayerView();
+            playerImage1 = new PlayerView();
 
-            return playerImage;
+            //playerImage.BackgroundColor = UIColor.Blue;
+            //playerImage1.BackgroundColor = UIColor.Green;
+
+            View.Add(playerImage);
+            View.Add(playerImage1);
+
+            /* 
+             *  🔈
+             *  
+             *  My prefernce is to write constraints in code instead of using the storyboard.. but im down with whatever you guys want.
+             *  When I started my crash course in Xamarin.iOS, iOS 11 had just come out and the Xamarin designer had several bugs. So in
+             *  order to deliver the iPad app for our client in time I just deleted the storyboard and started with frame based layouts.
+             */
+
+            // Start: Image view Constraints
+            // -------------------------------
+            //playerImage.WidthAnchor.ConstraintEqualTo(View.WidthAnchor, .25f).Active = true;
+            //playerImage1.WidthAnchor.ConstraintEqualTo(View.WidthAnchor, .25f).Active = true;
+
+            //var aspectRatio = 1;
+            //playerImage.WidthAnchor.ConstraintEqualTo(playerImage.HeightAnchor, aspectRatio).Active = true;
+            //playerImage1.WidthAnchor.ConstraintEqualTo(playerImage1.HeightAnchor, aspectRatio).Active = true;
+
+            //playerImage.TopAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.TopAnchor, 80).Active = true;
+            //playerImage1.TopAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.TopAnchor, 80).Active = true;
+
+
+            //playerImage.LeadingAnchor.ConstraintEqualTo(View.LeadingAnchor, 20).Active = true;
+            //playerImage1.TrailingAnchor.ConstraintEqualTo(View.TrailingAnchor, 20).Active = true;
+
+            //playerImage.TopAnchor.ConstraintEqualTo(playerImage1.TopAnchor).Active = true;
+            //View.TrailingAnchor.ConstraintEqualTo(playerImage1.TrailingAnchor, 20).Active = true;
+
+            //var compressionConstraint = playerImage1.LeadingAnchor.ConstraintEqualTo(playerImage.TrailingAnchor, 50);
+            //compressionConstraint.Priority = (float)UILayoutPriority.DefaultHigh;
+            //compressionConstraint.Active = true;
+            // END: Image view Constraints
+            // -------------------------------
+
+            // Start: Image view Constraints
+            // -------------------------------
+            playerImage.WidthAnchor.ConstraintEqualTo(150).Active = true;
+            playerImage1.WidthAnchor.ConstraintEqualTo(150).Active = true;
+
+            playerImage.HeightAnchor.ConstraintEqualTo(150).Active = true;
+            playerImage1.HeightAnchor.ConstraintEqualTo(150).Active = true;
+
+            playerImage.TopAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.TopAnchor, 40).Active = true;
+            playerImage1.TopAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.TopAnchor, 40).Active = true;
+
+            playerImage.LeadingAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.LeadingAnchor, 10).Active = true;
+            View.LayoutMarginsGuide.TrailingAnchor.ConstraintEqualTo(playerImage1.TrailingAnchor, 10).Active = true;
+            // END: Image view Constraints
+            // -------------------------------
+
+            //playerImage.WidthAnchor.ConstraintEqualTo(150).Active = true;
+            //playerImage.HeightAnchor.ConstraintEqualTo(150).Active = true;
+
+            //playerImage.CenterXAnchor.ConstraintEqualTo(View.CenterXAnchor).Active = true;
+            //playerImage.CenterYAnchor.ConstraintEqualTo(View.CenterYAnchor).Active = true;
         }
-
-
-        private UIImage FromUrl(string uri)
-        {
-            return UIImage.FromFile("9524.png");
-
-            //using (var url = new NSUrl(uri))
-            //using (var data = NSData.FromUrl(url))
-            //    return UIImage.LoadFromData(data);
-        }
-
     }
 }
