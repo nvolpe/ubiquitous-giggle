@@ -36,7 +36,7 @@ namespace GuessingGame
             //StartNewGame();
         }
 
-        public async Task StartNewGame()
+        public async Task RetreiveGameData()
         {
             //// Comment out the HTTP calls. it takes too long while debugging
             GameDataService dataService = new GameDataService();
@@ -80,7 +80,12 @@ namespace GuessingGame
                 // Loser
                 return false;
             }
+        }
 
+        public List<PlayerView> GetOrderOfPlayers()
+        {
+            List<PlayerView> playersInOrder = PlayerViews.OrderByDescending(x => x.CurrentPlayer.fppg).ToList();
+            return playersInOrder;
         }
     }
 }

@@ -12,17 +12,22 @@ using CoreGraphics;
 using GuessingGame.Services;
 using GuessingGame.Models;
 using GuessingGame.Views;
+using System.Threading.Tasks;
 
 namespace GuessingGame
 {
     [Register("GameViewController")]
     public class GameViewController : UIViewController
     {
-        PlayerView playerImage;
-        PlayerView playerImage1;
-        ScoreView ScoreView;
+        NSLayoutConstraint[] PlayerViewRegularConstraints;
+        NSLayoutConstraint[] PlayerViewFinalConstraints;
 
+        public List<PlayerView> PlayerViews { get; set; }
+
+        ScoreView ScoreView;
         GuessGame Game;
+
+        private enum VeiwClasses { StaticView = 1, DynamicView };
 
         public GameViewController()
         {
@@ -53,12 +58,6 @@ namespace GuessingGame
             Initialize();
         }
 
-
-        //public override void ViewDidLayoutSubviews()
-        //{
-        //    //base.ViewDidLayoutSubviews();
-        //}
-
         async void Initialize()
         {
             UIActivityIndicatorView activitySpinner = new UIActivityIndicatorView(UIActivityIndicatorViewStyle.Gray);
@@ -68,31 +67,35 @@ namespace GuessingGame
             View.Add(activitySpinner);
 
             Game = new GuessGame();
+            await Game.RetreiveGameData();
 
-            await Game.StartNewGame();
+            PlayerViews = Game.GetRandomPlayers();
+            Add2PlayerViews();
 
-            List<PlayerView> playerViews = Game.GetRandomPlayers();
-
-            AddPlayerViews(playerViews);
             AddScoreView();
-
             activitySpinner.StopAnimating();
             activitySpinner.RemoveFromSuperview();
         }
 
-        private void AddPlayerViews(List<PlayerView> playerViews)
+        private void StartNewMatch()
         {
-            //playerImage = CreateImageView("");
-            //playerImage1 = CreateImageView("");
+            PlayerViews = Game.GetRandomPlayers();
+            Add2PlayerViews();
+        }
 
-            playerImage = playerViews[0];
-            playerImage1 = playerViews[1];
+        private void Add2PlayerViews()
+        {
+            var playerView1 = PlayerViews[0];
+            var playerView2 = PlayerViews[1];
 
-            View.Add(playerImage);
-            View.Add(playerImage1);
+            playerView1.Tag = (int)VeiwClasses.DynamicView;
+            playerView2.Tag = (int)VeiwClasses.DynamicView;
 
-            playerImage.PlayerSelected += PlayerSelected;
-            playerImage1.PlayerSelected += PlayerSelected;
+            View.Add(playerView1);
+            View.Add(playerView2);
+
+            playerView1.PlayerSelected += PlayerSelected;
+            playerView2.PlayerSelected += PlayerSelected;
 
             /* 
              *  🔈
@@ -104,22 +107,36 @@ namespace GuessingGame
 
             // Start: Player view Constraints
             // -------------------------------
-            playerImage.WidthAnchor.ConstraintEqualTo(150).Active = true;
-            playerImage1.WidthAnchor.ConstraintEqualTo(150).Active = true;
 
-            playerImage.HeightAnchor.ConstraintEqualTo(150).Active = true;
-            playerImage1.HeightAnchor.ConstraintEqualTo(150).Active = true;
+            // I wish i could figure out how to iterate a list of views and mathematically calculate the right constraint values. but ya. 
+            PlayerViewRegularConstraints = new[] {
+                playerView1.WidthAnchor.ConstraintEqualTo(150),
+                playerView2.WidthAnchor.ConstraintEqualTo(150),
 
-            playerImage.TopAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.TopAnchor, 40).Active = true;
-            playerImage1.TopAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.TopAnchor, 40).Active = true;
+                playerView1.HeightAnchor.ConstraintEqualTo(150),
+                playerView2.HeightAnchor.ConstraintEqualTo(150),
 
-            playerImage.LeadingAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.LeadingAnchor, 10).Active = true;
-            View.LayoutMarginsGuide.TrailingAnchor.ConstraintEqualTo(playerImage1.TrailingAnchor, 10).Active = true;
+                playerView1.TopAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.TopAnchor, 40),
+                playerView2.TopAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.TopAnchor, 40),
+
+                playerView1.LeadingAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.LeadingAnchor, 10),
+                View.LayoutMarginsGuide.TrailingAnchor.ConstraintEqualTo(playerView2.TrailingAnchor, 10),
+            };
 
             // END: Player view Constraints
             // -------------------------------
+
+            ApplyConstraints(PlayerViewRegularConstraints);
         }
 
+        private void RemoveOldPlayerViews()
+        {
+            foreach (UIView subview in View.Subviews)
+            {
+                if (subview.Tag == (int)VeiwClasses.DynamicView)
+                    subview.RemoveFromSuperview();
+            }
+        }
 
         private void AddScoreView()
         {
@@ -138,7 +155,7 @@ namespace GuessingGame
 
             // Start: Score View Constraints
             // -------------------------------
-            ScoreView.TopAnchor.ConstraintEqualTo(playerImage1.LayoutMarginsGuide.BottomAnchor, 160).Active = true;
+            ScoreView.TopAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.TopAnchor, 300).Active = true;
             ScoreView.LeadingAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.LeadingAnchor).Active = true;
             View.LayoutMarginsGuide.TrailingAnchor.ConstraintEqualTo(ScoreView.TrailingAnchor).Active = true;
             View.LayoutMarginsGuide.BottomAnchor.ConstraintEqualTo(ScoreView.BottomAnchor).Active = true;
@@ -147,21 +164,97 @@ namespace GuessingGame
             // -------------------------------
         }
 
-        private void GuessButton_TouchUpInside(object sender, EventArgs e)
+        private void ApplyConstraints(NSLayoutConstraint[] constraints)
+        {
+            NSLayoutConstraint.ActivateConstraints(constraints);
+        }
+
+        private void AnimatePlayerViewOrder()
+        {
+            UIView.Animate(1.0, () => {
+                NSLayoutConstraint.DeactivateConstraints(PlayerViewRegularConstraints);
+                NSLayoutConstraint.ActivateConstraints(PlayerViewFinalConstraints);
+                View.LayoutIfNeeded();
+            });
+        }
+
+
+        private void UpdateConstraintPlacement(List<PlayerView> playerViews)
+        {
+            /* 
+            *  🔈
+            *  
+            *  This was designed to add some sex appeal to the app. To discover who won, the app animates the winner to the front of the other player.
+            *  
+            */
+
+            var playerView1 = playerViews[0]; // The winner goes first
+            var playerView2 = playerViews[1];
+
+            PlayerViewFinalConstraints = new[] {
+                playerView1.WidthAnchor.ConstraintEqualTo(150),
+                playerView2.WidthAnchor.ConstraintEqualTo(150),
+
+                playerView1.HeightAnchor.ConstraintEqualTo(150),
+                playerView2.HeightAnchor.ConstraintEqualTo(150),
+
+                playerView1.TopAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.TopAnchor, 80),
+                playerView2.TopAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.TopAnchor, 80),
+
+                playerView1.LeadingAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.LeadingAnchor, 5),
+                View.LayoutMarginsGuide.TrailingAnchor.ConstraintEqualTo(playerView2.TrailingAnchor, 5),
+            };
+
+            // Now animate the constraints
+            AnimatePlayerViewOrder();
+
+            foreach (var playerView in PlayerViews)
+            {
+                playerView.SetNeedsDisplay(); // Got fix my rounded imageviews with this call to drawrect
+            }
+        }
+
+
+        private async void GuessButton_TouchUpInside(object sender, EventArgs e)
         {
             // Disable the button so they cant guess again
             ScoreView.DisableButton();
-
             bool didGuessCorrectly = Game.CheckGuess();
+
+            if (Game.Score == 10)
+            {
+                // Game over, you won, start new game?
+            }
 
             if (didGuessCorrectly)
             {
-                ScoreView.ScoreLabel.Text = "Winnnnar";
+                ScoreView.MessageLabel.Text = "Winnnnar";
             }
             else
             {
-                ScoreView.ScoreLabel.Text = "Loser";
+                ScoreView.MessageLabel.Text = "You are Loser, try harder";
             }
+
+            ScoreView.ScoreLabel.Text = string.Format("Score {0} of 10", Game.Score);
+
+
+            // ----------------------------------------------
+
+            var players = Game.GetOrderOfPlayers();
+
+            foreach (var item in players)
+            {
+                var roundedPoints = Math.Round((double)item.CurrentPlayer.fppg, 2);
+                item.FppgLabel.Text = string.Format("FPPG: {0}", roundedPoints); 
+            }
+
+            UpdateConstraintPlacement(players);
+
+            // Wait to start the next game a few seconds
+            await Task.Delay(5000);
+
+            RemoveOldPlayerViews();
+            StartNewMatch();
         }
 
         private void PlayerSelected(Player player)

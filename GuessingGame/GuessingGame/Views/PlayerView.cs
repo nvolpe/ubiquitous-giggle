@@ -16,7 +16,7 @@ namespace GuessingGame.Views
     {
         public UIImageView PlayerImageView { get; set; }
         public UILabel PlayerNameLabel { get; set; }
-
+        public UILabel FppgLabel { get; set; }
         public Player CurrentPlayer { get; set; }
 
         public event Action<Player> PlayerSelected;
@@ -26,17 +26,19 @@ namespace GuessingGame.Views
             CurrentPlayer = player;
 
             CreateImageView();
-            CreateLabel();
+            CreateLabels();
             this.TranslatesAutoresizingMaskIntoConstraints = false;
+            this.BackgroundColor = UIColor.Clear;
 
             // Just so we can see the frame while debugging
             this.Layer.BorderColor = UIColor.Purple.CGColor; 
             this.Layer.BorderWidth = 5;
         }
 
-        public override void LayoutMarginsDidChange()
+        public override void Draw(CGRect rect)
         {
-            base.LayoutMarginsDidChange();
+            base.Draw(rect);
+            this.BackgroundColor = UIColor.Clear;
 
             // this is hacky, I can't figure out how to resize the orginal image, and the parent imageview size. 
             var radius = (this.Frame.Size.Height * .75) / 2;
@@ -60,6 +62,10 @@ namespace GuessingGame.Views
             PlayerNameLabel.CenterXAnchor.ConstraintEqualTo(this.CenterXAnchor).Active = true;
             PlayerNameLabel.TopAnchor.ConstraintEqualTo(PlayerImageView.BottomAnchor, 5).Active = true;
 
+            FppgLabel.WidthAnchor.ConstraintEqualTo(this.WidthAnchor).Active = true;
+            FppgLabel.CenterXAnchor.ConstraintEqualTo(this.CenterXAnchor).Active = true;
+            FppgLabel.TopAnchor.ConstraintEqualTo(PlayerNameLabel.BottomAnchor, 5).Active = true;
+
             base.UpdateConstraints();
         }
 
@@ -81,18 +87,28 @@ namespace GuessingGame.Views
             this.Add(PlayerImageView);
         }
 
-        private void CreateLabel()
+        private void CreateLabels()
         {
             string playerName = string.Format("{0} {1}", CurrentPlayer.first_name, CurrentPlayer.last_name);
 
             PlayerNameLabel = new UILabel();
             PlayerNameLabel.TranslatesAutoresizingMaskIntoConstraints = false;
             PlayerNameLabel.TextColor = UIColor.Black;
-            PlayerNameLabel.Font = UIFont.FromName("Helvetica-Bold", 20f);
+            PlayerNameLabel.Font = UIFont.FromName("Helvetica-Bold", 14f);
+            PlayerNameLabel.MinimumFontSize = 8f;
             PlayerNameLabel.TextAlignment = UITextAlignment.Center;
             PlayerNameLabel.Text = playerName;
 
+            FppgLabel = new UILabel();
+            FppgLabel.TranslatesAutoresizingMaskIntoConstraints = false;
+            FppgLabel.TextColor = UIColor.Black;
+            FppgLabel.Font = UIFont.FromName("Helvetica-Bold", 14f);
+            FppgLabel.MinimumFontSize = 8f;
+            FppgLabel.TextAlignment = UITextAlignment.Center;
+            FppgLabel.Text = "";
+
             this.Add(PlayerNameLabel);
+            this.Add(FppgLabel);
         }
 
         private UIImage FromUrl()
