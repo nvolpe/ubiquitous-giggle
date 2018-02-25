@@ -68,14 +68,10 @@ namespace GuessingGame
             View.Add(activitySpinner);
 
             Game = new GuessGame();
+
             await Game.StartNewGame();
 
             List<PlayerView> playerViews = Game.GetRandomPlayers();
-
-
-            //var url = gameData.Players[0].images.@default.url;
-            //var url1 = gameData.Players[1].images.@default.url;
-
 
             AddPlayerViews(playerViews);
             AddScoreView();
@@ -130,6 +126,8 @@ namespace GuessingGame
             ScoreView = new ScoreView();
             View.Add(ScoreView);
 
+            ScoreView.GuessButton.TouchUpInside += GuessButton_TouchUpInside;
+
             /* 
              *  🔈
              *  
@@ -149,9 +147,27 @@ namespace GuessingGame
             // -------------------------------
         }
 
-        private void PlayerSelected(string playerName)
+        private void GuessButton_TouchUpInside(object sender, EventArgs e)
         {
-            ScoreView.EnableButton(playerName);
+            // Disable the button so they cant guess again
+            ScoreView.DisableButton();
+
+            bool didGuessCorrectly = Game.CheckGuess();
+
+            if (didGuessCorrectly)
+            {
+                ScoreView.ScoreLabel.Text = "Winnnnar";
+            }
+            else
+            {
+                ScoreView.ScoreLabel.Text = "Loser";
+            }
+        }
+
+        private void PlayerSelected(Player player)
+        {
+            Game.SelectedPlayer = player;
+            ScoreView.EnableButton(player);
         }
     }
 }

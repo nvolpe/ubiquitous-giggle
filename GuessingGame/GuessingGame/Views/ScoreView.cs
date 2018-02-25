@@ -6,6 +6,9 @@ using CoreGraphics;
 using Foundation;
 using UIKit;
 
+using GuessingGame.Services;
+using GuessingGame.Models;
+
 namespace GuessingGame.Views
 {
     class ScoreView : UIView
@@ -99,13 +102,24 @@ namespace GuessingGame.Views
             this.Add(GuessButton);
         }
 
-        public void EnableButton(string playername)
+        public void EnableButton(Player player)
         {
+            string playerName = string.Format("{0} {1}", player.first_name, player.last_name);
+
             GuessButton.Alpha = 1f;
             GuessButton.BackgroundColor = UIColor.Green;
             GuessButton.UserInteractionEnabled = true;
 
-            NameLabel.Text = playername;
+            NameLabel.Text = playerName;
+        }
+
+        public void DisableButton()
+        {
+            GuessButton.Alpha = .5f;
+            GuessButton.BackgroundColor = UIColor.Blue;
+            GuessButton.UserInteractionEnabled = false;
+
+            NameLabel.Text = "------";
         }
     }
 }

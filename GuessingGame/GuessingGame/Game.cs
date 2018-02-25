@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 using Foundation;
 using UIKit;
@@ -9,17 +10,26 @@ using UIKit;
 using GuessingGame.Services;
 using GuessingGame.Models;
 using GuessingGame.Views;
-using System.Threading.Tasks;
 
 namespace GuessingGame
 {
     public class GuessGame
     {
-        PlayerView Player1;
-        PlayerView Player2;
-        PlayerView Player3;
+
+        /* 
+         *  🔈
+         *  
+         *  Coding saturday night is the best.
+         *  
+         */
 
         public GameData GameData { get; set; }
+
+        public List<PlayerView> PlayerViews { get; set; }
+
+        public Player SelectedPlayer { get; set; }
+
+        public int Score { get; set; }
 
         public GuessGame()
         {
@@ -33,23 +43,44 @@ namespace GuessingGame
             GameData = await dataService.GetGameData();
         }
 
-        public List<PlayerView> GetRandomPlayers()
+        public List<PlayerView> GetRandomPlayers(int amountOfPlayers = 2)
         {
-            List<PlayerView> playerViews = new List<PlayerView>();
+            PlayerViews = new List<PlayerView>();
 
-            // TODO: get random players from list
+            // get random players from list
             var totalNumberOfPlayers = GameData.Players.Count();
 
-            var player1 = GameData.Players[0];
-            var player2 = GameData.Players[1];
+            var rnd = new Random();
 
-            PlayerView player1View = new PlayerView(player1);
-            PlayerView player2View = new PlayerView(player2);
+            // Avoid duplicate random numbers
+            var randomNumbers = Enumerable.Range(1, totalNumberOfPlayers).OrderBy(x => rnd.Next()).Take(amountOfPlayers).ToList();
 
-            playerViews.Add(player1View);
-            playerViews.Add(player2View);
+            foreach (var item in randomNumbers)
+            {
+                var player = GameData.Players[item];
+                PlayerView playerView = new PlayerView(player);
+                PlayerViews.Add(playerView);
+            }
 
-            return playerViews;
+            return PlayerViews;
+        }
+
+        public bool CheckGuess()
+        {
+            PlayerView bestPlayer = PlayerViews.OrderByDescending(x => x.CurrentPlayer.fppg).FirstOrDefault();
+
+            if (bestPlayer.CurrentPlayer.id == SelectedPlayer.id)
+            {
+                // Winner
+                Score += 1;
+                return true;
+            }
+            else
+            {
+                // Loser
+                return false;
+            }
+
         }
     }
 }

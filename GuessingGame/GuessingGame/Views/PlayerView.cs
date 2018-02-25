@@ -19,7 +19,7 @@ namespace GuessingGame.Views
 
         public Player CurrentPlayer { get; set; }
 
-        public event Action<string> PlayerSelected;
+        public event Action<Player> PlayerSelected;
 
         public PlayerView(Player player)
         {
@@ -83,12 +83,14 @@ namespace GuessingGame.Views
 
         private void CreateLabel()
         {
+            string playerName = string.Format("{0} {1}", CurrentPlayer.first_name, CurrentPlayer.last_name);
+
             PlayerNameLabel = new UILabel();
             PlayerNameLabel.TranslatesAutoresizingMaskIntoConstraints = false;
             PlayerNameLabel.TextColor = UIColor.Black;
             PlayerNameLabel.Font = UIFont.FromName("Helvetica-Bold", 20f);
             PlayerNameLabel.TextAlignment = UITextAlignment.Center;
-            PlayerNameLabel.Text = "Michael Jordan";
+            PlayerNameLabel.Text = playerName;
 
             this.Add(PlayerNameLabel);
         }
@@ -108,7 +110,7 @@ namespace GuessingGame.Views
         void ImageTapped()
         {
             if (PlayerSelected != null)
-                PlayerSelected(PlayerNameLabel.Text);
+                PlayerSelected(CurrentPlayer);
         }
     }
 }

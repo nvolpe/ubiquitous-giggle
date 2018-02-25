@@ -24,5 +24,16 @@ namespace GuessingGame.Tests
         {
             Assert.True(false);
         }
+
+        [Test]
+        public void ShouldHave2Results()
+        {
+            var sut = new GuessGame();
+            int expected = 2;
+
+            var players = sut.GetRandomPlayers();
+
+            Assert.AreEqual(players.Count, expected);
+        }
     }
 }

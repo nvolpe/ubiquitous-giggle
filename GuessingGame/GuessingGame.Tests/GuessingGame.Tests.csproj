@@ -81,5 +81,13 @@
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GuessingGame\GuessingGame.csproj">
+      <Project>{c83f6d56-35d7-4a4a-a81d-c6265f71e931}</Project>
+      <Name>GuessingGame</Name>
+      <IsAppExtension>false</IsAppExtension>
+      <IsWatchApp>false</IsWatchApp>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
