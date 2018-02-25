@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Drawing;
+using System.Collections.Generic;
+
 
 using CoreFoundation;
 using UIKit;
 using Foundation;
 using CoreGraphics;
+
 
 using GuessingGame.Services;
 using GuessingGame.Models;
@@ -18,6 +21,8 @@ namespace GuessingGame
         PlayerView playerImage;
         PlayerView playerImage1;
         ScoreView ScoreView;
+
+        GuessGame Game;
 
         public GameViewController()
         {
@@ -62,27 +67,30 @@ namespace GuessingGame
 
             View.Add(activitySpinner);
 
-            // Comment out the HTTP calls. it takes too long while debugging
-            //GameDataService dataService = new GameDataService();
-            //GameData gameData = await dataService.GetGameData();
+            Game = new GuessGame();
+            await Game.StartNewGame();
+
+            List<PlayerView> playerViews = Game.GetRandomPlayers();
+
 
             //var url = gameData.Players[0].images.@default.url;
             //var url1 = gameData.Players[1].images.@default.url;
 
-            AddPlayerViews();
+
+            AddPlayerViews(playerViews);
             AddScoreView();
 
             activitySpinner.StopAnimating();
             activitySpinner.RemoveFromSuperview();
         }
 
-        private void AddPlayerViews()
+        private void AddPlayerViews(List<PlayerView> playerViews)
         {
             //playerImage = CreateImageView("");
             //playerImage1 = CreateImageView("");
 
-            playerImage = new PlayerView();
-            playerImage1 = new PlayerView();
+            playerImage = playerViews[0];
+            playerImage1 = playerViews[1];
 
             View.Add(playerImage);
             View.Add(playerImage1);

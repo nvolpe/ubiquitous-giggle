@@ -59,6 +59,7 @@
     <CodesignKey>iPhone Developer</CodesignKey>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Game.cs" />
     <Compile Include="GameViewController.cs" />
     <Compile Include="Helpers\ConstraintUtil.cs" />
     <Compile Include="Main.cs" />

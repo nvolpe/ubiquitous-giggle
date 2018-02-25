@@ -6,17 +6,25 @@ using CoreGraphics;
 using Foundation;
 using UIKit;
 
+using GuessingGame.Services;
+using GuessingGame.Models;
+using GuessingGame.Views;
+
 namespace GuessingGame.Views
 {
-    class PlayerView : UIView
+    public class PlayerView : UIView
     {
         public UIImageView PlayerImageView { get; set; }
         public UILabel PlayerNameLabel { get; set; }
 
+        public Player CurrentPlayer { get; set; }
+
         public event Action<string> PlayerSelected;
 
-        public PlayerView(/*UIImage image*/)
+        public PlayerView(Player player)
         {
+            CurrentPlayer = player;
+
             CreateImageView();
             CreateLabel();
             this.TranslatesAutoresizingMaskIntoConstraints = false;
@@ -87,11 +95,14 @@ namespace GuessingGame.Views
 
         private UIImage FromUrl()
         {
-            return UIImage.FromFile("9524.png");
+            //return UIImage.FromFile("9524.png");
 
-            //using (var url = new NSUrl(uri))
-            //using (var data = NSData.FromUrl(url))
-            //    return UIImage.LoadFromData(data);
+            var uri = CurrentPlayer.images.@default.url;
+            //var url1 = gameData.Players[1].images.@default.url;
+
+            using (var url = new NSUrl(uri))
+            using (var data = NSData.FromUrl(url))
+                return UIImage.LoadFromData(data);
         }
 
         void ImageTapped()

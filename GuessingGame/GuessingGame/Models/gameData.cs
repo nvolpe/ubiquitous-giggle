@@ -8,7 +8,7 @@ using UIKit;
 
 namespace GuessingGame.Models
 {
-    class GameData
+    public class GameData
     {
         //public Meta _meta { get; set; }
         //public List<Fixture> fixtures { get; set; }
