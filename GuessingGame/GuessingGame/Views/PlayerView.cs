@@ -29,10 +29,6 @@ namespace GuessingGame.Views
             CreateLabels();
             this.TranslatesAutoresizingMaskIntoConstraints = false;
             this.BackgroundColor = UIColor.Clear;
-
-            // Just so we can see the frame while debugging
-            this.Layer.BorderColor = UIColor.Purple.CGColor; 
-            this.Layer.BorderWidth = 5;
         }
 
         public override void Draw(CGRect rect)
@@ -46,8 +42,6 @@ namespace GuessingGame.Views
             PlayerImageView.Layer.CornerRadius = (float)radius;
             PlayerImageView.ClipsToBounds = true;
         }
-
-        //public override CGSize IntrinsicContentSize => new CGSize(150, 150);
 
         public override void UpdateConstraints()
         {
@@ -69,7 +63,6 @@ namespace GuessingGame.Views
             base.UpdateConstraints();
         }
 
-
         private void CreateImageView()
         {
             UIImage image = FromUrl();
@@ -77,8 +70,8 @@ namespace GuessingGame.Views
             PlayerImageView = new UIImageView(image);
             PlayerImageView.ContentMode = UIViewContentMode.ScaleAspectFill;
             PlayerImageView.TranslatesAutoresizingMaskIntoConstraints = false;
-            PlayerImageView.Layer.BorderWidth = 5;
-            PlayerImageView.Layer.BorderColor = UIColor.Green.CGColor;
+            PlayerImageView.Layer.BorderWidth = 1;
+            PlayerImageView.Layer.BorderColor = UIColor.Blue.CGColor;
             PlayerImageView.UserInteractionEnabled = true;
 
             UITapGestureRecognizer tapGesture = new UITapGestureRecognizer(ImageTapped);
@@ -102,7 +95,7 @@ namespace GuessingGame.Views
             FppgLabel = new UILabel();
             FppgLabel.TranslatesAutoresizingMaskIntoConstraints = false;
             FppgLabel.TextColor = UIColor.Black;
-            FppgLabel.Font = UIFont.FromName("Helvetica-Bold", 14f);
+            FppgLabel.Font = UIFont.FromName("Helvetica-Bold", 20f);
             FppgLabel.MinimumFontSize = 8f;
             FppgLabel.TextAlignment = UITextAlignment.Center;
             FppgLabel.Text = "";
@@ -113,10 +106,7 @@ namespace GuessingGame.Views
 
         private UIImage FromUrl()
         {
-            //return UIImage.FromFile("9524.png");
-
             var uri = CurrentPlayer.images.@default.url;
-            //var url1 = gameData.Players[1].images.@default.url;
 
             using (var url = new NSUrl(uri))
             using (var data = NSData.FromUrl(url))

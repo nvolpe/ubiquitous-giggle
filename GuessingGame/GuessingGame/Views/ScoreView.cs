@@ -13,7 +13,7 @@ namespace GuessingGame.Views
 {
     class ScoreView : UIView
     {
-        public UILabel StaticLabel { get; set; }
+        public UILabel InfoLabel { get; set; }
         public UILabel NameLabel { get; set; }
         public UILabel ScoreLabel { get; set; }
         public UILabel MessageLabel { get; set; }
@@ -24,10 +24,6 @@ namespace GuessingGame.Views
             CreateViews();
 
             this.TranslatesAutoresizingMaskIntoConstraints = false;
-
-            // Just so we can see the frame while debugging
-            this.Layer.BorderColor = UIColor.Gray.CGColor; 
-            this.Layer.BorderWidth = 5;
         }
 
         public override void LayoutMarginsDidChange()
@@ -38,13 +34,13 @@ namespace GuessingGame.Views
         public override void UpdateConstraints()
         {
             // Goes before call into the base
-            StaticLabel.WidthAnchor.ConstraintEqualTo(this.WidthAnchor).Active = true;
-            StaticLabel.CenterXAnchor.ConstraintEqualTo(this.CenterXAnchor).Active = true;
-            StaticLabel.TopAnchor.ConstraintEqualTo(this.TopAnchor, 10).Active = true;
+            InfoLabel.WidthAnchor.ConstraintEqualTo(this.WidthAnchor).Active = true;
+            InfoLabel.CenterXAnchor.ConstraintEqualTo(this.CenterXAnchor).Active = true;
+            InfoLabel.TopAnchor.ConstraintEqualTo(this.TopAnchor, 10).Active = true;
 
             NameLabel.WidthAnchor.ConstraintEqualTo(this.WidthAnchor).Active = true;
             NameLabel.CenterXAnchor.ConstraintEqualTo(this.CenterXAnchor).Active = true;
-            NameLabel.TopAnchor.ConstraintEqualTo(StaticLabel.BottomAnchor, 10).Active = true;
+            NameLabel.TopAnchor.ConstraintEqualTo(InfoLabel.BottomAnchor, 10).Active = true;
 
             GuessButton.WidthAnchor.ConstraintEqualTo(150).Active = true;
             GuessButton.CenterXAnchor.ConstraintEqualTo(this.CenterXAnchor).Active = true;
@@ -66,12 +62,12 @@ namespace GuessingGame.Views
 
             // The Labels
             // ---------------------------------
-            StaticLabel = new UILabel();
-            StaticLabel.TranslatesAutoresizingMaskIntoConstraints = false;
-            StaticLabel.TextColor = UIColor.Black;
-            StaticLabel.Font = UIFont.FromName("Helvetica-Bold", 20f);
-            StaticLabel.TextAlignment = UITextAlignment.Center;
-            StaticLabel.Text = "Your Selection:";
+            InfoLabel = new UILabel();
+            InfoLabel.TranslatesAutoresizingMaskIntoConstraints = false;
+            InfoLabel.TextColor = UIColor.Black;
+            InfoLabel.Font = UIFont.FromName("Helvetica-Bold", 20f);
+            InfoLabel.TextAlignment = UITextAlignment.Center;
+            InfoLabel.Text = "Your Selection:";
 
             NameLabel = new UILabel();
             NameLabel.TranslatesAutoresizingMaskIntoConstraints = false;
@@ -107,7 +103,7 @@ namespace GuessingGame.Views
             GuessButton.SetTitleColor(UIColor.White, UIControlState.Normal);
 
             // add these suckas to the super view
-            this.Add(StaticLabel);
+            this.Add(InfoLabel);
             this.Add(NameLabel);
             this.Add(MessageLabel);
             this.Add(ScoreLabel);

@@ -1,38 +1,40 @@
 ﻿using System;
 using NUnit.Framework;
+using GuessingGame.Services;
+using System.Threading.Tasks;
+
 
 namespace GuessingGame.Tests
 {
     [TestFixture]
     public class UnitTests
     {
-        [Test]
-        public void Pass()
+        private GuessGame sut;
+
+        [TestFixtureSetUp]
+        public void BeforeAnyTestStarted()
         {
-            Assert.True(true);
+            // Performa setup here?
         }
 
-        [Test]
-        public void Fail()
-        {
-            Assert.False(true);
-        }
 
         [Test]
-        [Ignore("another time")]
-        public void Ignore()
+        public async void ShouldHave2Players()
         {
-            Assert.True(false);
-        }
+            // Arrange
+            //FakeGameDataService dataService = new FakeGameDataService(); // This should probably be a mock service because its an async call.. Unit tests should be fast! So this data should be mocked up I feel like.
+            GameDataService dataService = new GameDataService();
+            var gameData = await dataService.GetGameData();
 
-        [Test]
-        public void ShouldHave2Results()
-        {
-            var sut = new GuessGame();
+            // Setup Guessing Game with data
+            sut = new GuessGame(gameData);
+
             int expected = 2;
 
-            var players = sut.GetRandomPlayers();
+            // Act
+            var players = sut.GetRandomPlayers(2);
 
+            // Assert
             Assert.AreEqual(players.Count, expected);
         }
     }

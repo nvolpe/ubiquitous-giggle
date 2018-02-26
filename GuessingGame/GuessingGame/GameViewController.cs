@@ -50,7 +50,7 @@ namespace GuessingGame
              *  
              */
 
-            View.BackgroundColor = UIColor.LightGray;
+            View.BackgroundColor = UIColor.White;
 
             base.ViewDidLoad();
 
@@ -66,19 +66,36 @@ namespace GuessingGame
 
             View.Add(activitySpinner);
 
-            Game = new GuessGame();
-            await Game.RetreiveGameData();
+            GameDataService dataService = new GameDataService();
+            var gameData = await dataService.GetGameData();
+
+            Game = new GuessGame(gameData);
 
             PlayerViews = Game.GetRandomPlayers();
-            Add2PlayerViews();
 
+            Add2PlayerViews();
             AddScoreView();
+
+            // We have data, stop showing spinner
             activitySpinner.StopAnimating();
             activitySpinner.RemoveFromSuperview();
         }
 
-        private void StartNewMatch()
+        private async void StartNewMatch()
         {
+            var total = 5;
+
+            // tick every every second 
+            while (total >= 0)
+            {
+                await Task.Delay(1000);
+                ScoreView.InfoLabel.Text = string.Format("Game Restarts in: {0}", total);
+                total--;
+            }
+
+            ScoreView.InfoLabel.Text = string.Format("Your Selection:");
+
+            RemoveOldPlayerViews();
             PlayerViews = Game.GetRandomPlayers();
             Add2PlayerViews();
         }
@@ -108,7 +125,7 @@ namespace GuessingGame
             // Start: Player view Constraints
             // -------------------------------
 
-            // I wish i could figure out how to iterate a list of views and mathematically calculate the right constraint values. but ya. 
+            // I wish i could figure out how to iterate a list of views and mathematically calculate the right constraint values.
             PlayerViewRegularConstraints = new[] {
                 playerView1.WidthAnchor.ConstraintEqualTo(150),
                 playerView2.WidthAnchor.ConstraintEqualTo(150),
@@ -215,16 +232,11 @@ namespace GuessingGame
         }
 
 
-        private async void GuessButton_TouchUpInside(object sender, EventArgs e)
+        private void GuessButton_TouchUpInside(object sender, EventArgs e)
         {
             // Disable the button so they cant guess again
             ScoreView.DisableButton();
             bool didGuessCorrectly = Game.CheckGuess();
-
-            if (Game.Score == 10)
-            {
-                // Game over, you won, start new game?
-            }
 
             if (didGuessCorrectly)
             {
@@ -237,9 +249,7 @@ namespace GuessingGame
 
             ScoreView.ScoreLabel.Text = string.Format("Score {0} of 10", Game.Score);
 
-
             // ----------------------------------------------
-
             var players = Game.GetOrderOfPlayers();
 
             foreach (var item in players)
@@ -250,11 +260,15 @@ namespace GuessingGame
 
             UpdateConstraintPlacement(players);
 
-            // Wait to start the next game a few seconds
-            await Task.Delay(5000);
-
-            RemoveOldPlayerViews();
-            StartNewMatch();
+            if (Game.Score == 10)
+            {
+                // Game over, you won, start new game?
+                Console.WriteLine("You Won game over");
+            }
+            else
+            {
+                StartNewMatch();
+            }
         }
 
         private void PlayerSelected(Player player)

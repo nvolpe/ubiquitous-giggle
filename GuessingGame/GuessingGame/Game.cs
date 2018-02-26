@@ -24,23 +24,13 @@ namespace GuessingGame
          */
 
         public GameData GameData { get; set; }
-
         public List<PlayerView> PlayerViews { get; set; }
-
         public Player SelectedPlayer { get; set; }
-
         public int Score { get; set; }
 
-        public GuessGame()
+        public GuessGame(GameData gameData)
         {
-            //StartNewGame();
-        }
-
-        public async Task RetreiveGameData()
-        {
-            //// Comment out the HTTP calls. it takes too long while debugging
-            GameDataService dataService = new GameDataService();
-            GameData = await dataService.GetGameData();
+            GameData = gameData;
         }
 
         public List<PlayerView> GetRandomPlayers(int amountOfPlayers = 2)
@@ -50,10 +40,13 @@ namespace GuessingGame
             // get random players from list
             var totalNumberOfPlayers = GameData.Players.Count();
 
-            var rnd = new Random();
-
             // Avoid duplicate random numbers
-            var randomNumbers = Enumerable.Range(1, totalNumberOfPlayers).OrderBy(x => rnd.Next()).Take(amountOfPlayers).ToList();
+            var rnd = new Random();
+            HashSet<int> randomNumbers = new HashSet<int>();
+            while (randomNumbers.Count < 2)
+            {
+                randomNumbers.Add(rnd.Next(1, totalNumberOfPlayers));
+            }
 
             foreach (var item in randomNumbers)
             {

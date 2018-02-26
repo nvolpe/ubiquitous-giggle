@@ -7,10 +7,18 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using GuessingGame.Models;
 using System.Threading.Tasks;
+using UIKit;
 
 namespace GuessingGame.Services
 {
-    class GameDataService
+
+    public interface IGameDataService
+    {
+        Task<GameData> GetGameData();
+    }
+
+
+    public class GameDataService: IGameDataService
     {
         public async Task<GameData> GetGameData()
         {
@@ -23,10 +31,9 @@ namespace GuessingGame.Services
              *  Cheers to dreamin' big.
              *  
              */
-
+            GameData gameData = new GameData();
             try
             {
-                GameData gameData = new GameData();
 
                 using (var client = new HttpClient())
                 {
@@ -36,28 +43,39 @@ namespace GuessingGame.Services
 
                     if (response.IsSuccessStatusCode)
                     {
-                        //dynamic d = JObject.Parse(contentReponse);
                         gameData = JsonConvert.DeserializeObject<GameData>(contentReponse);
                     }
-
-                    //if (response.IsSuccessStatusCode)
-                    //{
-                    //}
-                    //else if (response.StatusCode == HttpStatusCode.BadRequest)
-                    //{
-                    //}
                 }
 
                 return gameData;
             }
 
-            //catch (HttpRequestException exc)
-            //{
-            //}
+            catch (HttpRequestException exc)
+            {
+                // Log the error
+                UIAlertView alert = new UIAlertView()
+                {
+                    Title = "HttpRequestException",
+                    Message = exc.Message
+                };
+                alert.AddButton("OK");
+                alert.Show();
+
+                return gameData;
+            }
 
             catch (Exception exc)
             {
-                throw exc;
+                // Log the error
+                UIAlertView alert = new UIAlertView()
+                {
+                    Title = "Unhandled exception",
+                    Message = exc.Message
+                };
+                alert.AddButton("OK");
+                alert.Show();
+
+                return gameData;
             }
         }
 
