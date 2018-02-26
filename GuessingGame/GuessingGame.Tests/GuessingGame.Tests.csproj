@@ -61,9 +61,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="FakeGameDataService.cs" />
+    <Compile Include="DataServiceTests.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
-    <Compile Include="UnitTests.cs" />
+    <Compile Include="GameTests.cs" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Entitlements.plist" />

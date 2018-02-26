@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using GuessingGame.Models;
@@ -44,6 +45,10 @@ namespace GuessingGame.Services
                         gameData = JsonConvert.DeserializeObject<GameData>(contentReponse);
                     }
                 }
+
+                // catch NULL data upstream.. if no points, remove from list
+                var players = gameData.Players.Where(item => item.fppg != null).ToList();
+                gameData.Players = players;
 
                 return gameData;
             }
