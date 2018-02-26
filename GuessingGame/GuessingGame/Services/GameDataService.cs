@@ -22,19 +22,17 @@ namespace GuessingGame.Services
     {
         public async Task<GameData> GetGameData()
         {
-
             /* 
              *  🔈
              *  
              *  Where Do I see myself in 5 years, I'm glad you asked. I'd like to still be working for FanDuel as I think Fanduel we will be on the cutting edge for a long time. 
-             *  But my dream is life is to build 'something' completely new and awesome and run it myself. I think FanDuel will be a great place to hone my skills and continue to grow as a developer.
+             *  But my dream in life is to build 'something' completely new and awesome and run it myself. I think FanDuel will be a great place to hone my skills and continue to grow as a developer.
              *  Cheers to dreamin' big.
              *  
              */
             GameData gameData = new GameData();
             try
             {
-
                 using (var client = new HttpClient())
                 {
                     // GET the player data url
@@ -78,6 +76,5 @@ namespace GuessingGame.Services
                 return gameData;
             }
         }
-
     }
 }

@@ -65,6 +65,10 @@
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <Compile Include="Services\GameDataService.cs" />
+    <Compile Include="VictoryViewController.cs" />
+    <Compile Include="VictoryViewController.designer.cs">
+      <DependentUpon>VictoryViewController.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\ScoreView.cs" />
     <Compile Include="Views\PlayerView.cs" />
     <None Include="GettingStarted.Xamarin" />
@@ -73,6 +77,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <InterfaceDefinition Include="Resources\LaunchScreen.xib" />
     <None Include="packages.config" />
+    <InterfaceDefinition Include="VictoryViewController.xib" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">

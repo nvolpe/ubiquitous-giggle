@@ -14,6 +14,20 @@ namespace GuessingGame.Views
 {
     public class PlayerView : UIView
     {
+
+        /* 
+         *  🔈
+         *  
+         *  I have always considered myself an Android and Windows guy. I don't even own a Macbook, but I'm using one currently as a build agent.
+         *  Learning iOS for my job has been such a fun task these last few months and I defnitely appreciate how the software is built. But now it just makes me even more curious to see how
+         *  Android handles the UI. (Other than my experience with Xamarin.Forms)
+         *  
+         *  FWIW I am developing on a Windows Machine with Visual Studio 2017. I have used Visual Studio For Mac a bit. 
+         *  
+         *  It sounds like Fan Duel is really leveraging the benefits of Xamarin and maxmizing code reuse for the buisness logic. I would love to be a part of that. 
+         */
+
+
         public UIImageView PlayerImageView { get; set; }
         public UILabel PlayerNameLabel { get; set; }
         public UILabel FppgLabel { get; set; }
@@ -21,12 +35,14 @@ namespace GuessingGame.Views
 
         public event Action<Player> PlayerSelected;
 
+        UITapGestureRecognizer TapGesture;
+
         public PlayerView(Player player)
         {
             CurrentPlayer = player;
-
             CreateImageView();
             CreateLabels();
+
             this.TranslatesAutoresizingMaskIntoConstraints = false;
             this.BackgroundColor = UIColor.Clear;
         }
@@ -74,8 +90,8 @@ namespace GuessingGame.Views
             PlayerImageView.Layer.BorderColor = UIColor.Blue.CGColor;
             PlayerImageView.UserInteractionEnabled = true;
 
-            UITapGestureRecognizer tapGesture = new UITapGestureRecognizer(ImageTapped);
-            PlayerImageView.AddGestureRecognizer(tapGesture);
+            TapGesture = new UITapGestureRecognizer(ImageTapped);
+            PlayerImageView.AddGestureRecognizer(TapGesture);
 
             this.Add(PlayerImageView);
         }
@@ -91,6 +107,8 @@ namespace GuessingGame.Views
             PlayerNameLabel.MinimumFontSize = 8f;
             PlayerNameLabel.TextAlignment = UITextAlignment.Center;
             PlayerNameLabel.Text = playerName;
+            PlayerNameLabel.LineBreakMode = UILineBreakMode.WordWrap;
+            PlayerNameLabel.Lines = 2;
 
             FppgLabel = new UILabel();
             FppgLabel.TranslatesAutoresizingMaskIntoConstraints = false;
@@ -117,6 +135,11 @@ namespace GuessingGame.Views
         {
             if (PlayerSelected != null)
                 PlayerSelected(CurrentPlayer);
+        }
+
+        public void DisableImageViewButton()
+        {
+            PlayerImageView.RemoveGestureRecognizer(TapGesture);
         }
     }
 }

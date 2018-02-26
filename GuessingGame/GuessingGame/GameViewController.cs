@@ -202,6 +202,7 @@ namespace GuessingGame
             *  🔈
             *  
             *  This was designed to add some sex appeal to the app. To discover who won, the app animates the winner to the front of the other player.
+            *  Ideally I would have 3 image views, but it is 845 pm sunday night and I dont think I have time!
             *  
             */
 
@@ -236,15 +237,24 @@ namespace GuessingGame
         {
             // Disable the button so they cant guess again
             ScoreView.DisableButton();
+
+            // Block the user from selecting a new player until the game starts back over
+            foreach (var playerView in PlayerViews)
+            {
+                playerView.DisableImageViewButton();
+            }
+
+            // Check if they got it right?!
             bool didGuessCorrectly = Game.CheckGuess();
+
 
             if (didGuessCorrectly)
             {
-                ScoreView.MessageLabel.Text = "Winnnnar";
+                ScoreView.MessageLabel.Text = "Winnnnar!";
             }
             else
             {
-                ScoreView.MessageLabel.Text = "You are Loser, try harder";
+                ScoreView.MessageLabel.Text = "You are a Loser, try harder.";
             }
 
             ScoreView.ScoreLabel.Text = string.Format("Score {0} of 10", Game.Score);
@@ -264,6 +274,8 @@ namespace GuessingGame
             {
                 // Game over, you won, start new game?
                 Console.WriteLine("You Won game over");
+
+                this.PresentViewController(new VictoryViewController(), true, null);
             }
             else
             {

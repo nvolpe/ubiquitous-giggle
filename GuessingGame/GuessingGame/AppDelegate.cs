@@ -22,7 +22,13 @@ namespace GuessingGame
             Window = new UIWindow(UIScreen.MainScreen.Bounds);
 
             // If you have defined a root view controller, set it here:
-            Window.RootViewController = new GameViewController();
+
+            UINavigationController controller = new UINavigationController(new GameViewController());
+            controller.SetNavigationBarHidden(true, true);
+
+
+            Window.RootViewController = controller;
+
 
             // make the window visible
             Window.MakeKeyAndVisible();
