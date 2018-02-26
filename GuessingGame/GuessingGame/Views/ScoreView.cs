@@ -115,7 +115,7 @@ namespace GuessingGame.Views
             string playerName = string.Format("{0} {1}", player.first_name, player.last_name);
 
             GuessButton.Alpha = 1f;
-            GuessButton.BackgroundColor = UIColor.Green;
+            GuessButton.BackgroundColor = UIColor.FromDisplayP3(34f / 255.0f, 139f / 255.0f, 34f / 255.0f, 1.0f); // Not an obnoxious green.
             GuessButton.UserInteractionEnabled = true;
 
             NameLabel.Text = playerName;

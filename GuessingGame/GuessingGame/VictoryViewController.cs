@@ -25,11 +25,11 @@ namespace GuessingGame
             var VictoryLabel = new UILabel();
             VictoryLabel.TranslatesAutoresizingMaskIntoConstraints = false;
             VictoryLabel.TextColor = UIColor.Black;
-            VictoryLabel.Font = UIFont.FromName("Helvetica-Bold", 40f);
+            VictoryLabel.Font = UIFont.FromName("Helvetica-Bold", 30f);
             VictoryLabel.TextAlignment = UITextAlignment.Center;
             VictoryLabel.Text = "You won! You should also hire me.";
             VictoryLabel.LineBreakMode = UILineBreakMode.WordWrap;
-            VictoryLabel.Lines = 2;
+            VictoryLabel.Lines = 4;
 
             View.Add(VictoryLabel);
 
